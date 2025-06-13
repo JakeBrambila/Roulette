@@ -33,7 +33,7 @@ var wheel = []Slot{
 	{26, "B"},
 }
 
-func spinAndReveal() {
+func spinAndReveal() Slot {
 	spinLength := 30
 	stripSize := 11 // Display window
 
@@ -55,6 +55,7 @@ func spinAndReveal() {
 	winner := wheel[(finalOffset+centerIndex)%len(wheel)]
 
 	fmt.Printf("\n🎯 Winning Number: %s%d%s (%s)\n", colorCode(winner.Color), winner.Number, Reset, winner.Color)
+	return Slot{winner.Number, winner.Color}
 }
 
 func showStrip(start int, size int) {

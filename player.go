@@ -9,8 +9,8 @@ import (
 )
 
 type Bet struct {
-	numberBet    bool
-	colorBet     bool
+	isNumberBet  bool
+	isColorBet   bool
 	colorChosen  string
 	numberChosen int
 }
@@ -29,10 +29,6 @@ func (p *Player) WonBet() {
 
 func (p *Player) LostBet() {
 	p.totalMoney -= p.currentBet
-	p.currentBet = 0
-}
-
-func (p *Player) Tie() {
 	p.currentBet = 0
 }
 
@@ -59,7 +55,7 @@ func (p *Player) StartingMoney() {
 
 func (p *Player) PlaceBet() {
 	for {
-		fmt.Println("How much do you wanna bet? ")
+		fmt.Printf("How much do you wanna bet? ")
 		reader := bufio.NewReader(os.Stdin)
 		input, err := reader.ReadString('\n')
 		if err != nil {
@@ -68,7 +64,7 @@ func (p *Player) PlaceBet() {
 		}
 		input = strings.TrimSpace(input)
 		bet, err := strconv.Atoi(input)
-		if err != nil {
+		if err != nil || bet < 0 || bet > p.totalMoney {
 			fmt.Println("Invalid entry.")
 			continue
 		}
@@ -93,16 +89,39 @@ func (p *Player) ColorOrNum() {
 			continue
 		}
 		if bet == 1 {
-			//bet is red
+			p.slotBet.isColorBet = true
+			p.slotBet.colorChosen = "R"
 		} else if bet == 2 {
-			//bet is on black
+			p.slotBet.isColorBet = true
+			p.slotBet.colorChosen = "B"
 		} else if bet == 3 {
-			//bet is a number
-			//needs more logic here
+			p.slotBet.isNumberBet = true
+			p.chooseNum()
 		}
-
 		break
 	}
+}
+
+func (p *Player) chooseNum() {
+	var numChosen int
+	for {
+		reader := bufio.NewReader(os.Stdin)
+		fmt.Println("Choose a number between 1-36: ")
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			fmt.Println("Invalid entry please try again.")
+			continue
+		}
+		input = strings.TrimSpace(input)
+		num, error := strconv.Atoi(input)
+		if error != nil || (num < 1 || num > 36) {
+			fmt.Println("Invalid entry please try again.")
+			continue
+		}
+		numChosen = num
+		break
+	}
+	p.slotBet.numberChosen = numChosen
 }
 
 func (p *Player) CalculateEarnings() {
@@ -125,4 +144,8 @@ func (p *Player) CalculateEarnings() {
 	} else {
 		fmt.Println("You are a true gambler. I bow down to you master.")
 	}
+}
+
+func (p *Player) ShowPlayerStats() {
+	//shows how much you lost or won after the whole game is done
 }
