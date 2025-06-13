@@ -14,7 +14,6 @@ func main() {
 
 	fmt.Println("Welcome to Terminal Roulette!!")
 	time.Sleep(1 * time.Second)
-	clearConsole()
 	player.StartingMoney()
 
 	for {
@@ -40,6 +39,7 @@ func main() {
 		if answer == 1 {
 			continue
 		}
+		player.CalculateEarnings()
 		break
 	}
 
